@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบบันทึกและประวัติการเช็คระยะรถยนต์ Isuzu</title>
+  
+  <!-- เชื่อมโยงไฟล์สไตล์ CSS ภายนอก -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- SheetJS สำหรับ Export Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <!-- ฟอร์มบันทึกข้อมูล -->
+  <div class="container">
+    <h2>🚗 บันทึกการเช็คระยะและอะไหล่ (Isuzu)</h2>
+    <form id="maintenanceForm">
+      <div class="form-group">
+        <label for="licensePlate">ทะเบียนรถ / ชื่อรถ:</label>
+        <input type="text" id="licensePlate" required placeholder="เช่น กข 1234 กทม">
+      </div>
+      <div class="form-group">
+        <label for="currentOdo">เลขไมล์ปัจจุบัน (กม.):</label>
+        <input type="number" id="currentOdo" required placeholder="เช่น 40000">
+      </div>
+      <div class="form-group">
+        <label for="serviceInterval">รอบการเช็คระยะ:</label>
+        <select id="serviceInterval">
+          <option value="10,000 กม.">10,000 กม. / 6 เดือน</option>
+          <option value="20,000 กม.">20,000 กม. / 12 เดือน</option>
+          <option value="40,000 กม.">40,000 กม. / 24 เดือน</option>
+          <option value="80,000 กม.">80,000 กม. / 48 เดือน</option>
+          <option value="100,000 กม.">100,000 กม. / 60 เดือน</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="serviceDate">วันที่เข้าเช็คระยะ:</label>
+        <input type="date" id="serviceDate" required>
+      </div>
+
+      <div class="form-group">
+        <label>รายการอะไหล่ / งานบริการ:</label>
+        <div id="partsContainer"></div>
+        <button type="button" class="btn-add" onclick="addPartRow()">+ เพิ่มรายการอะไหล่</button>
+      </div>
+
+      <div class="form-group">
+        <label for="totalCost">รวมค่าใช้จ่ายทั้งหมด (บาท):</label>
+        <input type="number" id="totalCost" readonly value="0.00" style="background-color: #e9ecef; font-weight: bold;">
+      </div>
+
+      <div class="form-group">
+        <label for="imageFiles">อัปโหลดรูปภาพประกอบ (เลือก 2 - 5 รูป):</label>
+        <input type="file" id="imageFiles" accept="image/*" multiple required>
+      </div>
+
+      <div class="form-group">
+        <label for="remark">หมายเหตุ:</label>
+        <input type="text" id="remark" placeholder="ข้อความเพิ่มเติม">
+      </div>
+
+      <button type="submit" id="submitBtn">บันทึกข้อมูลและอัปโหลดรูปภาพ</button>
+    </form>
+    <div id="status"></div>
+  </div>
+
+  <!-- ส่วนแสดงประวัติและการค้นหา -->
+  <div class="container">
+    <h2>📋 ประวัติการเช็คระยะย้อนหลัง</h2>
+    
+    <div class="form-group" style="margin-bottom: 10px;">
+      <input type="text" id="searchPlate" placeholder="🔍 ค้นหาด้วยเลขทะเบียนรถ..." oninput="filterHistory()">
+    </div>
+
+    <div class="export-btn-group">
+      <button type="button" class="btn-export-excel" onclick="exportToExcel()">📊 ดาวน์โหลด Excel</button>
+      <button type="button" class="btn-export-csv" onclick="exportToCSV()">📄 ดาวน์โหลด CSV</button>
+    </div>
+
+    <div class="summary-card">
+      <div>จำนวนครั้งที่เข้าเช็ค: <span class="summary-value" id="summaryCount">0</span> ครั้ง</div>
+      <div>รวมค่าใช้จ่าย: <span class="summary-value" id="summaryTotal">0.00</span> บาท</div>
+    </div>
+
+    <div class="next-service-card">
+      <div>เลขไมล์ล่าสุด: <span class="next-service-value" id="latestOdo">0</span> กม.</div>
+      <div>กำหนดเช็คครั้งถัดไป: <span class="next-service-value" id="nextOdo">-</span> กม.</div>
+    </div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>วันที่เช็ค</th>
+            <th>ทะเบียน</th>
+            <th>เลขไมล์</th>
+            <th>รอบระยะ</th>
+            <th>รายการตรวจเช็ค</th>
+            <th>ค่าใช้จ่าย</th>
+            <th>รูปภาพใน Drive</th>
+          </tr>
+        </thead>
+        <tbody id="historyTableBody">
+          <tr><td colspan="7" style="text-align: center;">กำลังโหลดข้อมูล...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // ⚙️ ตั้งค่า Apps Script URL ไว้ที่นี่ (หลังบ้าน)
+    // ==========================================
+    const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL";
+
+    const ISUZU_PARTS_LIST = [
+      "น้ำมันเครื่อง DDI MAX (6+1 ลิตร)",
+      "ไส้กรองน้ำมันเครื่อง",
+      "แหวนรองน็อตถ่ายน้ำมันเครื่อง",
+      "ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)",
+      "ไส้กรองอากาศ",
+      "น้ำมันเกียร์ธรรมดา / อัตโนมัติ",
+      "น้ำมันเฟืองท้าย",
+      "น้ำมันเบรก",
+      "น้ำยาคูลแลนท์ (หม้อน้ำ)",
+      "ระบุอื่นๆ..."
+    ];
+
+    let allHistoryData = [];
+    let currentFilteredData = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      addPartRow();
+      loadHistory();
+    });
+
+    function addPartRow(selectedName = "", qty = 1, price = 0) {
+      const container = document.getElementById("partsContainer");
+      const rowId = Date.now() + Math.random();
+      
+      const div = document.createElement("div");
+      div.className = "part-row";
+      div.id = `row-${rowId}`;
+
+      let optionsHtml = ISUZU_PARTS_LIST.map(item => `<option value="${item}" ${item === selectedName ? "selected" : ""}>${item}</option>`).join("");
+
+      div.innerHTML = `
+        <select style="flex: 2;" onchange="handlePartSelect(this)" class="part-select">${optionsHtml}</select>
+        <input type="text" style="flex: 2; display: none;" placeholder="ระบุชื่ออะไหล่" class="custom-part-name">
+        <input type="number" style="flex: 1;" placeholder="จำนวน" value="${qty}" min="1" onchange="calculateTotalCost()" class="part-qty">
+        <input type="number" style="flex: 1.2;" placeholder="ราคา/หน่วย" value="${price}" min="0" onchange="calculateTotalCost()" class="part-price">
+        <button type="button" class="btn-remove" onclick="removePartRow('row-${rowId}')">✕</button>
+      `;
+      container.appendChild(div);
+      calculateTotalCost();
+    }
+
+    function handlePartSelect(selectElem) {
+      const customInput = selectElem.nextElementSibling;
+      if (selectElem.value === "ระบุอื่นๆ...") {
+        customInput.style.display = "block";
+        customInput.required = true;
+      } else {
+        customInput.style.display = "none";
+        customInput.required = false;
+      }
+    }
+
+    function removePartRow(rowId) {
+      const row = document.getElementById(rowId);
+      if (row) { row.remove(); calculateTotalCost(); }
+    }
+
+    function calculateTotalCost() {
+      let total = 0;
+      document.querySelectorAll(".part-row").forEach(row => {
+        const qty = parseFloat(row.querySelector(".part-qty").value) || 0;
+        const price = parseFloat(row.querySelector(".part-price").value) || 0;
+        total += qty * price;
+      });
+      document.getElementById("totalCost").value = total.toFixed(2);
+    }
+
+    function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = event => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width, height = img.height;
+            if (width > height) {
+              if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
+            } else {
+              if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; }
+            }
+            canvas.width = width; canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve({ base64: canvas.toDataURL('image/jpeg', quality).split(',')[1], mimeType: 'image/jpeg' });
+          };
+          img.onerror = error => reject(error);
+        };
+        reader.onerror = error => reject(error);
+      });
+    }
+
+    document.getElementById('maintenanceForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const statusDiv = document.getElementById('status');
+      const files = document.getElementById('imageFiles').files;
+
+      if (files.length < 2 || files.length > 5) {
+        alert("กรุณาเลือกรูปภาพประกอบจำนวน 2 ถึง 5 รูปครับ");
+        return;
+      }
+
+      statusDiv.style.color = 'blue';
+      statusDiv.textContent = 'กำลังประมวลผลและอัปโหลด...';
+      document.getElementById('submitBtn').disabled = true;
+
+      try {
+        const imagesData = await Promise.all(Array.from(files).map(file => compressImage(file)));
+        const itemsChecked = [];
+        document.querySelectorAll(".part-row").forEach(row => {
+          const selectVal = row.querySelector(".part-select").value;
+          const customVal = row.querySelector(".custom-part-name").value;
+          const name = selectVal === "ระบุอื่นๆ..." ? customVal : selectVal;
+          const qty = parseFloat(row.querySelector(".part-qty").value) || 0;
+          const price = parseFloat(row.querySelector(".part-price").value) || 0;
+          if (name) itemsChecked.push({ name, qty, price, total: qty * price });
+        });
+
+        const payload = {
+          licensePlate: document.getElementById('licensePlate').value,
+          currentOdo: document.getElementById('currentOdo').value,
+          serviceInterval: document.getElementById('serviceInterval').value,
+          serviceDate: document.getElementById('serviceDate').value,
+          itemsChecked: itemsChecked,
+          totalCost: document.getElementById('totalCost').value,
+          remark: document.getElementById('remark').value,
+          images: imagesData
+        };
+
+        const response = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const resResult = await response.json();
+
+        if (resResult.status === "success") {
+          statusDiv.style.color = 'green';
+          statusDiv.textContent = 'บันทึกข้อมูลสำเร็จ!';
+          document.getElementById('maintenanceForm').reset();
+          document.getElementById('partsContainer').innerHTML = '';
+          addPartRow();
+          loadHistory();
+        } else {
+          throw new Error(resResult.message);
+        }
+      } catch (err) {
+        statusDiv.style.color = 'red';
+        statusDiv.textContent = 'เกิดข้อผิดพลาด: ' + err.message;
+      } finally {
+        document.getElementById('submitBtn').disabled = false;
+      }
+    });
+
+    function loadHistory() {
+      fetch(APPS_SCRIPT_URL)
+        .then(res => res.json())
+        .then(data => {
+          allHistoryData = Array.isArray(data) ? data.reverse() : [];
+          filterHistory();
+        })
+        .catch(err => console.error("Error loading history:", err));
+    }
+
+    function filterHistory() {
+      const keyword = document.getElementById('searchPlate').value.toLowerCase().trim();
+      const filtered = allHistoryData.filter(row => (row.LicensePlate || '').toLowerCase().includes(keyword));
+      renderTable(filtered);
+    }
+
+    function renderTable(data) {
+      currentFilteredData = data;
+      const tableBody = document.getElementById('historyTableBody');
+      tableBody.innerHTML = '';
+
+      let totalExpense = 0;
+      if (data.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">ไม่พบประวัติการเช็คระยะ</td></tr>';
+        document.getElementById('summaryCount').textContent = '0';
+        document.getElementById('summaryTotal').textContent = '0.00';
+        document.getElementById('latestOdo').textContent = '0';
+        document.getElementById('nextOdo').textContent = '-';
+        return;
+      }
+
+      const currentOdo = parseFloat(data[0].CurrentOdo) || 0;
+      let nextOdo = Math.ceil((currentOdo + 1) / 10000) * 10000;
+      if (nextOdo === currentOdo) nextOdo = currentOdo + 10000;
+
+      data.forEach(row => {
+        const cost = parseFloat(row.TotalCost) || 0;
+        totalExpense += cost;
+        const tr = document.createElement('tr');
+        
+        let dateStr = row.ServiceDate || (row.Timestamp ? new Date(row.Timestamp).toLocaleDateString('th-TH') : '');
+        let driveBtn = row.DriveFolderUrl ? `<a href="${row.DriveFolderUrl}" target="_blank" class="btn-drive">📂 เปิดดูรูป</a>` : '-';
+        let itemsDisplay = formatItemsText(row.ItemsChecked);
+
+        tr.innerHTML = `
+          <td>${dateStr}</td>
+          <td>${row.LicensePlate || ''}</td>
+          <td>${Number(row.CurrentOdo || 0).toLocaleString()} กม.</td>
+          <td>${row.ServiceInterval || ''}</td>
+          <td>${itemsDisplay}</td>
+          <td>${cost.toLocaleString(undefined, {minimumFractionDigits: 2})} ฿</td>
+          <td style="text-align: center;">${driveBtn}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+
+      document.getElementById('summaryCount').textContent = data.length.toLocaleString();
+      document.getElementById('summaryTotal').textContent = totalExpense.toLocaleString(undefined, {minimumFractionDigits: 2});
+      document.getElementById('latestOdo').textContent = currentOdo.toLocaleString();
+      document.getElementById('nextOdo').textContent = nextOdo.toLocaleString() + " กม.";
+    }
+
+    function formatItemsText(itemsRaw) {
+      if (typeof itemsRaw === 'string' && itemsRaw.startsWith('[')) {
+        try {
+          return JSON.parse(itemsRaw).map(i => `${i.name} (${i.qty} x ${i.price}฿)`).join(', ');
+        } catch(e) { return itemsRaw; }
+      }
+      return itemsRaw || '';
+    }
+
+    function exportToExcel() {
+      if (currentFilteredData.length === 0) { alert("ไม่มีข้อมูลสำหรับส่งออก"); return; }
+      const excelData = currentFilteredData.map(row => ({
+        "วันที่เข้าเช็ค": row.ServiceDate || '',
+        "ทะเบียนรถ": row.LicensePlate || '',
+        "เลขไมล์": Number(row.CurrentOdo || 0),
+        "รอบระยะ": row.ServiceInterval || '',
+        "รายการอะไหล่": formatItemsText(row.ItemsChecked),
+        "ค่าใช้จ่าย (บาท)": Number(row.TotalCost || 0),
+        "ลิงก์รูปภาพ": row.DriveFolderUrl || '',
+        "หมายเหตุ": row.Remark || ''
+      }));
+      const ws = XLSX.utils.json_to_sheet(excelData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "ประวัติ");
+      XLSX.writeFile(wb, "Isuzu_Maintenance_History.xlsx");
+    }
+
+    function exportToCSV() {
+      if (currentFilteredData.length === 0) { alert("ไม่มีข้อมูลสำหรับส่งออก"); return; }
+      let csv = "\uFEFFวันที่เข้าเช็ค,ทะเบียนรถ,เลขไมล์,รอบระยะ,รายการอะไหล่,ค่าใช้จ่าย,ลิงก์รูปภาพ,หมายเหตุ\n";
+      currentFilteredData.forEach(r => {
+        csv += `"${r.ServiceDate || ''}","${r.LicensePlate || ''}","${r.CurrentOdo || 0}","${r.ServiceInterval || ''}","${formatItemsText(r.ItemsChecked)}","${r.TotalCost || 0}","${r.DriveFolderUrl || ''}","${r.Remark || ''}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "Isuzu_Maintenance_History.csv";
+      link.click();
+    }
+  </script>
+</body>
+</html>
