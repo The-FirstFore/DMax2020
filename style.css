@@ -67,7 +67,7 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-.wrapper { max-width: 900px; margin: 0 auto; }
+.wrapper { max-width: 950px; margin: 0 auto; }
 
 .app-title {
   text-align: center;
@@ -330,9 +330,21 @@ input:focus, select:focus, textarea:focus {
 }
 
 table { width: 100%; border-collapse: collapse; text-align: left; background: var(--card-bg); }
-th { background: var(--table-header-bg); color: var(--text-muted); font-size: 12px; text-transform: uppercase; padding: 12px; border-bottom: 2px solid var(--border); }
-td { padding: 12px; font-size: 13px; border-bottom: 1px solid var(--border); color: var(--text-main); }
+th { background: var(--table-header-bg); color: var(--text-muted); font-size: 12px; text-transform: uppercase; padding: 12px; border-bottom: 2px solid var(--border); text-align: center; }
+td { padding: 12px; font-size: 13px; border-bottom: 1px solid var(--border); color: var(--text-main); text-align: center; }
+td:first-child, th:first-child { text-align: left; }
 tr:hover td { background: var(--table-row-hover); }
+
+.check-mark {
+  color: #10b981;
+  font-weight: bold;
+  font-size: 16px;
+}
+.change-mark {
+  color: #ef4444;
+  font-weight: bold;
+  font-size: 14px;
+}
 
 .btn-drive {
   background: rgba(14, 165, 233, 0.15);
