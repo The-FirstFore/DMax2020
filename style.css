@@ -405,3 +405,12 @@ tr:hover td { background: var(--table-row-hover); }
   transition: background 0.2s;
 }
 .btn-drive:hover { background: rgba(14, 165, 233, 0.3); }
+
+
+.badge-r, .mb-r {
+  background: #fee2e2 !important;
+  color: #ef4444 !important;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+}
