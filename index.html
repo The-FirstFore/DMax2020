@@ -154,7 +154,7 @@
       </div>
     </div>
 
-    <!-- TAB 3: ตารางบำรุงรักษามาตรฐาน Isuzu -->
+ <!-- TAB 3: ตารางบำรุงรักษามาตรฐาน Isuzu -->
     <div id="tabSchedule" class="tab-content">
       <div class="card">
         <h2>📋 ตารางตรวจเช็คระยะและเปลี่ยนถ่ายอะไหล่มาตรฐาน Isuzu (10,000 - 200,000 กม.)</h2>
@@ -162,12 +162,13 @@
           เลือกช่วงระยะทางด้านล่างเพื่อดูรายละเอียดอะไหล่ที่ต้องเปลี่ยนและรายการตรวจเช็กตามคู่มือทางการ
         </p>
 
+        <!-- 📌 นำโค้ดการ์ด 20 ระยะและ Legend Bar มาวางแทนที่ตรงนี้ครับ -->
         <div class="legend-bar">
-          <div class="legend-item"><span class="badge-r">R</span> = เปลี่ยน (Replace)</div>
-          <div class="legend-item"><span class="badge-i">I</span> = ตรวจเช็ก (Inspect)</div>
+          <div class="legend-item"><span class="badge-r" style="background: #fee2e2; color: #ef4444; padding: 2px 8px; border-radius: 6px; font-weight: bold;">R</span> = เปลี่ยน (Replace)</div>
+          <div class="legend-item"><span class="badge-i" style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 6px; font-weight: bold;">I</span> = ตรวจเช็ก (Inspect)</div>
         </div>
 
-        <div class="schedule-tabs-container" id="scheduleCardsContainer">
+        <div class="schedule-tabs-container" id="scheduleCardsContainer" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px;">
           <div class="sch-tab-card active" onclick="selectSchedule('10k')"><div class="sch-km">10,000 กม.</div><div class="sch-sub">6 เดือน</div></div>
           <div class="sch-tab-card" onclick="selectSchedule('20k')"><div class="sch-km">20,000 กม.</div><div class="sch-sub">12 เดือน</div></div>
           <div class="sch-tab-card" onclick="selectSchedule('30k')"><div class="sch-km">30,000 กม.</div><div class="sch-sub">18 เดือน</div></div>
@@ -189,6 +190,15 @@
           <div class="sch-tab-card" onclick="selectSchedule('190k')"><div class="sch-km">190,000 กม.</div><div class="sch-sub">114 เดือน</div></div>
           <div class="sch-tab-card" onclick="selectSchedule('200k')"><div class="sch-km">200,000 กม.</div><div class="sch-sub">120 เดือน 🔥</div></div>
         </div>
+        <!-- 📌 สิ้นสุดจุดที่นำมาวาง -->
+
+        <!-- ส่วนแสดงรายละเอียดอะไหล่ด้านล่าง (คงไว้ตามเดิม) -->
+        <div class="detail-section-box">
+          ...
+        </div>
+
+      </div>
+    </div>
 
         <div class="detail-section-box">
           <div class="detail-title">
