@@ -3,117 +3,196 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบบันทึกและประวัติการเช็คระยะรถยนต์ Isuzu</title>
+  <title>ระบบเช็คระยะรถยนต์ Isuzu</title>
   
-  <!-- เชื่อมโยงไฟล์สไตล์ CSS ภายนอก -->
+  <!-- Google Fonts: Prompt -->
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- เชื่อมโยงไฟล์ style.css -->
   <link rel="stylesheet" href="style.css">
-  
+
   <!-- SheetJS สำหรับ Export Excel -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
-  <!-- ฟอร์มบันทึกข้อมูล -->
-  <div class="container">
-    <h2>🚗 บันทึกการเช็คระยะและอะไหล่ (Isuzu)</h2>
-    <form id="maintenanceForm">
-      <div class="form-group">
-        <label for="licensePlate">ทะเบียนรถ / ชื่อรถ:</label>
-        <input type="text" id="licensePlate" required placeholder="เช่น กข 1234 กทม">
-      </div>
-      <div class="form-group">
-        <label for="currentOdo">เลขไมล์ปัจจุบัน (กม.):</label>
-        <input type="number" id="currentOdo" required placeholder="เช่น 40000">
-      </div>
-      <div class="form-group">
-        <label for="serviceInterval">รอบการเช็คระยะ:</label>
-        <select id="serviceInterval">
-          <option value="10,000 กม.">10,000 กม. / 6 เดือน</option>
-          <option value="20,000 กม.">20,000 กม. / 12 เดือน</option>
-          <option value="40,000 กม.">40,000 กม. / 24 เดือน</option>
-          <option value="80,000 กม.">80,000 กม. / 48 เดือน</option>
-          <option value="100,000 กม.">100,000 กม. / 60 เดือน</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="serviceDate">วันที่เข้าเช็คระยะ:</label>
-        <input type="date" id="serviceDate" required>
-      </div>
-
-      <div class="form-group">
-        <label>รายการอะไหล่ / งานบริการ:</label>
-        <div id="partsContainer"></div>
-        <button type="button" class="btn-add" onclick="addPartRow()">+ เพิ่มรายการอะไหล่</button>
-      </div>
-
-      <div class="form-group">
-        <label for="totalCost">รวมค่าใช้จ่ายทั้งหมด (บาท):</label>
-        <input type="number" id="totalCost" readonly value="0.00" style="background-color: #e9ecef; font-weight: bold;">
-      </div>
-
-      <div class="form-group">
-        <label for="imageFiles">อัปโหลดรูปภาพประกอบ (เลือก 2 - 5 รูป):</label>
-        <input type="file" id="imageFiles" accept="image/*" multiple required>
-      </div>
-
-      <div class="form-group">
-        <label for="remark">หมายเหตุ:</label>
-        <input type="text" id="remark" placeholder="ข้อความเพิ่มเติม">
-      </div>
-
-      <button type="submit" id="submitBtn">บันทึกข้อมูลและอัปโหลดรูปภาพ</button>
-    </form>
-    <div id="status"></div>
-  </div>
-
-  <!-- ส่วนแสดงประวัติและการค้นหา -->
-  <div class="container">
-    <h2>📋 ประวัติการเช็คระยะย้อนหลัง</h2>
-    
-    <div class="form-group" style="margin-bottom: 10px;">
-      <input type="text" id="searchPlate" placeholder="🔍 ค้นหาด้วยเลขทะเบียนรถ..." oninput="filterHistory()">
+  <div class="wrapper">
+    <div class="app-title">
+      <h1>🚗 Isuzu Maintenance System</h1>
+      <p>ระบบบันทึกและติดตามประวัติการเช็คระยะรถยนต์</p>
     </div>
 
-    <div class="export-btn-group">
-      <button type="button" class="btn-export-excel" onclick="exportToExcel()">📊 ดาวน์โหลด Excel</button>
-      <button type="button" class="btn-export-csv" onclick="exportToCSV()">📄 ดาวน์โหลด CSV</button>
+    <!-- ปุ่มเลือกธีมสีทรงกลม -->
+    <div class="theme-selector-bar">
+      <span style="font-size: 12px; font-weight: 600; color: var(--text-main);">ธีมสี:</span>
+      <div class="theme-dot dot-lavender active" onclick="setTheme('lavender')" title="Pastel Lavender"></div>
+      <div class="theme-dot dot-mint" onclick="setTheme('mint')" title="Pastel Mint"></div>
+      <div class="theme-dot dot-peach" onclick="setTheme('peach')" title="Pastel Peach"></div>
+      <div class="theme-dot dot-ocean" onclick="setTheme('ocean')" title="Pastel Ocean"></div>
+      <div class="theme-dot dot-dark" onclick="setTheme('dark')" title="Dark Mode 🌙"></div>
     </div>
 
-    <div class="summary-card">
-      <div>จำนวนครั้งที่เข้าเช็ค: <span class="summary-value" id="summaryCount">0</span> ครั้ง</div>
-      <div>รวมค่าใช้จ่าย: <span class="summary-value" id="summaryTotal">0.00</span> บาท</div>
+    <!-- Tab Navigation Bar -->
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('tabForm', this)">📝 บันทึกการเข้าเช็คระยะ</button>
+      <button class="tab-btn" onclick="switchTab('tabHistory', this)">🕒 ประวัติ & ค้นหาย้อนหลัง</button>
+      <button class="tab-btn" onclick="switchTab('tabSchedule', this)">📋 ตารางบำรุงรักษามาตรฐาน Isuzu</button>
     </div>
 
-    <div class="next-service-card">
-      <div>เลขไมล์ล่าสุด: <span class="next-service-value" id="latestOdo">0</span> กม.</div>
-      <div>กำหนดเช็คครั้งถัดไป: <span class="next-service-value" id="nextOdo">-</span> กม.</div>
+    <!-- TAB 1: ฟอร์มบันทึกข้อมูล -->
+    <div id="tabForm" class="tab-content active">
+      <div class="card">
+        <h2>📝 บันทึกข้อมูลการเช็คระยะ</h2>
+        <form id="maintenanceForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>ทะเบียนรถ / ชื่อรถ</label>
+              <input type="text" id="licensePlate" required placeholder="เช่น กข 1234 กทม">
+            </div>
+            <div class="form-group">
+              <label>เลขไมล์ปัจจุบัน (กม.)</label>
+              <input type="number" id="currentOdo" required placeholder="เช่น 40000">
+            </div>
+            <div class="form-group">
+              <label>รอบการเช็คระยะ</label>
+              <select id="serviceInterval">
+                <option value="10,000 กม.">10,000 กม. / 6 เดือน</option>
+                <option value="20,000 กม.">20,000 กม. / 12 เดือน</option>
+                <option value="40,000 กม.">40,000 กม. / 24 เดือน</option>
+                <option value="80,000 กม.">80,000 กม. / 48 เดือน</option>
+                <option value="100,000 กม.">100,000 กม. / 60 เดือน</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>วันที่เข้าเช็คระยะ</label>
+              <input type="date" id="serviceDate" required>
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label>รายการอะไหล่ / งานบริการ</label>
+            <div id="partsContainer"></div>
+            <button type="button" class="btn-add" onclick="addPartRow()">+ เพิ่มรายการอะไหล่</button>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>รวมค่าใช้จ่ายทั้งหมด (บาท)</label>
+              <input type="number" id="totalCost" readonly value="0.00" style="font-weight: bold;">
+            </div>
+            <div class="form-group">
+              <label>อัปโหลดรูปภาพ (2 - 5 รูป)</label>
+              <input type="file" id="imageFiles" accept="image/*" multiple required>
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label>หมายเหตุ</label>
+            <input type="text" id="remark" placeholder="ข้อความเพิ่มเติม (ถ้ามี)">
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn-submit">บันทึกข้อมูลและอัปโหลดรูปภาพ</button>
+        </form>
+        <div id="status"></div>
+      </div>
     </div>
 
-    <div class="table-responsive">
-      <table>
-        <thead>
-          <tr>
-            <th>วันที่เช็ค</th>
-            <th>ทะเบียน</th>
-            <th>เลขไมล์</th>
-            <th>รอบระยะ</th>
-            <th>รายการตรวจเช็ค</th>
-            <th>ค่าใช้จ่าย</th>
-            <th>รูปภาพใน Drive</th>
-          </tr>
-        </thead>
-        <tbody id="historyTableBody">
-          <tr><td colspan="7" style="text-align: center;">กำลังโหลดข้อมูล...</td></tr>
-        </tbody>
-      </table>
+    <!-- TAB 2: ประวัติและการค้นหา -->
+    <div id="tabHistory" class="tab-content">
+      <div class="card">
+        <h2>📋 ประวัติการเช็คระยะย้อนหลัง</h2>
+        
+        <!-- การ์ดสรุป -->
+        <div class="dashboard-flex">
+          <div class="dash-box box-green">
+            <div class="dash-title">ยอดรวมค่าใช้จ่าย</div>
+            <div class="dash-val"><span id="summaryTotal">0.00</span> ฿</div>
+            <div class="dash-sub">เข้าบริการทั้งหมด <span id="summaryCount">0</span> ครั้ง</div>
+          </div>
+          <div class="dash-box box-orange">
+            <div class="dash-title">รอบเช็คระยะครั้งถัดไป</div>
+            <div class="dash-val" id="nextOdo">-</div>
+            <div class="dash-sub">ไมล์ล่าสุด: <span id="latestOdo">0</span> กม.</div>
+          </div>
+        </div>
+
+        <!-- แถบค้นหาและปุ่ม Export -->
+        <div class="action-bar">
+          <input type="text" id="searchPlate" placeholder="🔍 ค้นหาด้วยเลขทะเบียนรถ..." oninput="filterHistory()" style="flex: 1; min-width: 200px;">
+          <div style="display: flex; gap: 6px;">
+            <button type="button" class="btn-export bg-excel" onclick="exportToExcel()">📊 Excel</button>
+            <button type="button" class="btn-export bg-csv" onclick="exportToCSV()">📄 CSV</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>วันที่เช็ค</th>
+                <th>ทะเบียน</th>
+                <th>เลขไมล์</th>
+                <th>รอบระยะ</th>
+                <th>รายการตรวจเช็ค</th>
+                <th>ค่าใช้จ่าย</th>
+                <th>รูปภาพ Drive</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">กำลังโหลดข้อมูล...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+
+    <!-- TAB 3: ตารางบำรุงรักษามาตรฐาน Isuzu -->
+    <div id="tabSchedule" class="tab-content">
+      <div class="card">
+        <h2>📋 ตารางบำรุงรักษามาตรฐาน Isuzu</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+          คำแนะนำระยะเวลาและรายการตรวจเช็คตามมาตรฐานการบำรุงรักษารถยนต์อีซูซุ (Isuzu Maintenance Schedule)
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ระยะทาง (กม.) / ระยะเวลา</th>
+                <th>รายการตรวจสอบและเปลี่ยนถ่ายหลัก</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>10,000 กม.</strong> หรือ 6 เดือน</td>
+                <td>เปลี่ยนน้ำมันเครื่อง, ไส้กรองน้ำมันเครื่อง, แหวนรองน็อตถ่าย, ตรวจเช็คระบบช่วงล่างและเบรกทั่วไป</td>
+              </tr>
+              <tr>
+                <td><strong>20,000 กม.</strong> หรือ 12 เดือน</td>
+                <td>เปลี่ยนน้ำมันเครื่อง, ไส้กรองน้ำมันเครื่อง, ไส้กรองแอร์, ไส้กรองอากาศ, ตรวจเช็คระบบน้ำมันเบรกและคลัตช์</td>
+              </tr>
+              <tr>
+                <td><strong>40,000 กม.</strong> หรือ 24 เดือน</td>
+                <td>เปลี่ยนน้ำมันเครื่อง, ไส้กรองน้ำมันเครื่อง, ไส้กรองเชื้อเพลิง (กรองโซล่า), น้ำมันเกียร์, น้ำมันเฟืองท้าย, น้ำยาหม้อน้ำ (คูลแลนท์)</td>
+              </tr>
+              <tr>
+                <td><strong>60,000 กม.</strong> หรือ 36 เดือน</td>
+                <td>เปลี่ยนน้ำมันเครื่อง, ไส้กรองน้ำมันเครื่อง, ไส้กรองอากาศ, ตรวจเช็คระบบสายพานหน้าเครื่องและหัวเทียน/หัวฉีด</td>
+              </tr>
+              <tr>
+                <td><strong>100,000 กม.</strong> หรือ 60 เดือน</td>
+                <td>เปลี่ยนถ่ายของเหลวระบบใหญ่ทั้งหมด, ตรวจเช็คปั๊มน้ำ, สายพานไท밍 (รุ่นที่ใช้สายพาน), และระบบระบายความร้อน</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    // ==========================================
-    // ⚙️ ตั้งค่า Apps Script URL ไว้ที่นี่ (หลังบ้าน)
-    // ==========================================
-    const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHaYw6RbM8MXUJNvPEeD4L81XlVKw3L91mN5H6LLSc9if1tomwHFyOZAO6arPM4nZI/exec";
 
     const ISUZU_PARTS_LIST = [
       "น้ำมันเครื่อง DDI MAX (6+1 ลิตร)",
@@ -134,7 +213,32 @@
     document.addEventListener("DOMContentLoaded", () => {
       addPartRow();
       loadHistory();
+      
+      const savedTheme = localStorage.getItem('isuzu_theme') || 'lavender';
+      setTheme(savedTheme);
     });
+
+    // ฟังก์ชันสลับ Tab เมนู
+    function switchTab(tabId, btnElem) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      btnElem.classList.add('active');
+    }
+
+    function setTheme(themeName) {
+      if (themeName === 'lavender') {
+        document.documentElement.removeAttribute('data-theme');
+      } else {
+        document.documentElement.setAttribute('data-theme', themeName);
+      }
+      localStorage.setItem('isuzu_theme', themeName);
+
+      document.querySelectorAll('.theme-dot').forEach(dot => dot.classList.remove('active'));
+      const activeDot = document.querySelector(`.dot-${themeName}`);
+      if(activeDot) activeDot.classList.add('active');
+    }
 
     function addPartRow(selectedName = "", qty = 1, price = 0) {
       const container = document.getElementById("partsContainer");
@@ -219,8 +323,8 @@
         return;
       }
 
-      statusDiv.style.color = 'blue';
-      statusDiv.textContent = 'กำลังประมวลผลและอัปโหลด...';
+      statusDiv.style.color = 'var(--primary)';
+      statusDiv.textContent = '⏳ กำลังประมวลผลและอัปโหลดข้อมูล...';
       document.getElementById('submitBtn').disabled = true;
 
       try {
@@ -250,8 +354,8 @@
         const resResult = await response.json();
 
         if (resResult.status === "success") {
-          statusDiv.style.color = 'green';
-          statusDiv.textContent = 'บันทึกข้อมูลสำเร็จ!';
+          statusDiv.style.color = '#10b981';
+          statusDiv.textContent = '✅ บันทึกข้อมูลสำเร็จ!';
           document.getElementById('maintenanceForm').reset();
           document.getElementById('partsContainer').innerHTML = '';
           addPartRow();
@@ -260,8 +364,8 @@
           throw new Error(resResult.message);
         }
       } catch (err) {
-        statusDiv.style.color = 'red';
-        statusDiv.textContent = 'เกิดข้อผิดพลาด: ' + err.message;
+        statusDiv.style.color = '#ef4444';
+        statusDiv.textContent = '❌ เกิดข้อผิดพลาด: ' + err.message;
       } finally {
         document.getElementById('submitBtn').disabled = false;
       }
@@ -290,7 +394,7 @@
 
       let totalExpense = 0;
       if (data.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">ไม่พบประวัติการเช็คระยะ</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">ไม่พบประวัติการเช็คระยะ</td></tr>';
         document.getElementById('summaryCount').textContent = '0';
         document.getElementById('summaryTotal').textContent = '0.00';
         document.getElementById('latestOdo').textContent = '0';
@@ -313,11 +417,11 @@
 
         tr.innerHTML = `
           <td>${dateStr}</td>
-          <td>${row.LicensePlate || ''}</td>
+          <td><strong>${row.LicensePlate || ''}</strong></td>
           <td>${Number(row.CurrentOdo || 0).toLocaleString()} กม.</td>
           <td>${row.ServiceInterval || ''}</td>
           <td>${itemsDisplay}</td>
-          <td>${cost.toLocaleString(undefined, {minimumFractionDigits: 2})} ฿</td>
+          <td><strong>${cost.toLocaleString(undefined, {minimumFractionDigits: 2})} ฿</strong></td>
           <td style="text-align: center;">${driveBtn}</td>
         `;
         tableBody.appendChild(tr);
