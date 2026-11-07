@@ -36,7 +36,7 @@
     <div class="tab-nav">
       <button class="tab-btn active" onclick="switchTab('tabForm', this)">📝 บันทึกการเข้าเช็คระยะ</button>
       <button class="tab-btn" onclick="switchTab('tabHistory', this)">🕒 ประวัติ & ค้นหาย้อนหลัง</button>
-      <button class="tab-btn" onclick="switchTab('tabSchedule', this)">📋 ตารางบำรุงรักษามาตรฐาน Isuzu</button>
+      <button class="tab-btn" onclick="switchTab('tabSchedule', this)">📋 ดารางบำรุงรักษามาตรฐาน Isuzu</button>
     </div>
 
     <!-- TAB 1: ฟอร์มบันทึกข้อมูล -->
@@ -146,42 +146,98 @@
       </div>
     </div>
 
-    <!-- TAB 3: ตารางบำรุงรักษามาตรฐาน Isuzu -->
+    <!-- TAB 3: ดารางบำรุงรักษามาตรฐาน Isuzu -->
     <div id="tabSchedule" class="tab-content">
       <div class="card">
-        <h2>📋 ตารางบำรุงรักษามาตรฐาน Isuzu</h2>
+        <h2>📋 ดารางบำรุงรักษามาตรฐาน Isuzu</h2>
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
-          คำแนะนำระยะเวลาและรายการตรวจเช็คตามมาตรฐานการบำรุงรักษารถยนต์อีซูซุ (Isuzu Maintenance Schedule)
+          ตารางแสดงรายการตรวจเช็คและเปลี่ยนถ่ายตามระยะทางมาตรฐานของรถปิกอัพ Isuzu (สัญลักษณ์: <span class="check-mark">✓</span> ตรวจเช็ค / <span class="change-mark">เปลี่ยน</span> เปลี่ยนถ่าย)
         </p>
 
         <div class="table-container">
           <table>
             <thead>
               <tr>
-                <th>ระยะทาง (กม.) / ระยะเวลา</th>
-                <th>รายการตรวจสอบและเปลี่ยนถ่ายหลัก</th>
+                <th style="text-align: left;">รายการตรวจเช็คและบำรุงรักษา</th>
+                <th>10,000 กม.<br><span style="font-size: 10px; font-weight: normal;">6 เดือน</span></th>
+                <th>20,000 กม.<br><span style="font-size: 10px; font-weight: normal;">12 เดือน</span></th>
+                <th>30,000 กม.<br><span style="font-size: 10px; font-weight: normal;">18 เดือน</span></th>
+                <th>40,000 กม.<br><span style="font-size: 10px; font-weight: normal;">24 เดือน</span></th>
+                <th>50,000 กม.<br><span style="font-size: 10px; font-weight: normal;">30 เดือน</span></th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>10,000 กม.</strong> หรือ 6 เดือน</td>
-                <td>เปลี่ยนน้ำมันเครื่อง, ไส้กรองน้ำมันเครื่อง, แหวนรองน็อตถ่าย, ตรวจเช็คระบบช่วงล่างและเบรกทั่วไป</td>
+                <td style="text-align: left;">1. น้ำมันเครื่อง</td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
               </tr>
               <tr>
-                <td><strong>20,000 กม.</strong> หรือ 12 เดือน</td>
-                <td>เปลี่ยนน้ำมันเครื่อง, ไส้กรองน้ำมันเครื่อง, ไส้กรองแอร์, ไส้กรองอากาศ, ตรวจเช็คระบบน้ำมันเบรกและคลัตช์</td>
+                <td style="text-align: left;">2. ไส้กรองน้ำมันเครื่อง</td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
               </tr>
               <tr>
-                <td><strong>40,000 กม.</strong> หรือ 24 เดือน</td>
-                <td>เปลี่ยนน้ำมันเครื่อง, ไส้กรองน้ำมันเครื่อง, ไส้กรองเชื้อเพลิง (กรองโซล่า), น้ำมันเกียร์, น้ำมันเฟืองท้าย, น้ำยาหม้อน้ำ (คูลแลนท์)</td>
+                <td style="text-align: left;">3. แหวนรองน็อตถ่ายน้ำมันเครื่อง</td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
               </tr>
               <tr>
-                <td><strong>60,000 กม.</strong> หรือ 36 เดือน</td>
-                <td>เปลี่ยนน้ำมันเครื่อง, ไส้กรองน้ำมันเครื่อง, ไส้กรองอากาศ, ตรวจเช็คระบบสายพานหน้าเครื่องและหัวเทียน/หัวฉีด</td>
+                <td style="text-align: left;">4. ไส้กรองเชื้อเพลิง (กรองโซล่า)</td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="check-mark">✓</span></td>
               </tr>
               <tr>
-                <td><strong>100,000 กม.</strong> หรือ 60 เดือน</td>
-                <td>เปลี่ยนถ่ายของเหลวระบบใหญ่ทั้งหมด, ตรวจเช็คปั๊มน้ำ, สายพานไท밍 (รุ่นที่ใช้สายพาน), และระบบระบายความร้อน</td>
+                <td style="text-align: left;">5. ไส้กรองอากาศ</td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="check-mark">✓</span></td>
+              </tr>
+              <tr>
+                <td style="text-align: left;">6. น้ำมันเกียร์ / น้ำมันเฟืองท้าย</td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td><span class="check-mark">✓</span></td>
+              </tr>
+              <tr>
+                <td style="text-align: left;">7. น้ำมันเบรก และระบบเบรก</td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+              </tr>
+              <tr>
+                <td style="text-align: left;">8. น้ำยาหล่อเย็นเครื่องยนต์ (คูลแลนท์)</td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="change-mark">เปลี่ยน*</span></td>
+                <td><span class="check-mark">✓</span></td>
+              </tr>
+              <tr>
+                <td style="text-align: left;">9. ตรวจเช็กระบบช่วงล่างและยาง</td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
+                <td><span class="check-mark">✓</span></td>
               </tr>
             </tbody>
           </table>
