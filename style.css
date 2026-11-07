@@ -1,0 +1,186 @@
+body { 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+  background: #f4f6f9; 
+  padding: 20px; 
+  color: #333; 
+}
+
+.container { 
+  max-width: 800px; 
+  margin: auto; 
+  background: white; 
+  padding: 25px; 
+  border-radius: 12px; 
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+  margin-bottom: 25px; 
+}
+
+h2, h3 { 
+  color: #d9534f; 
+  text-align: center; 
+}
+
+.form-group { 
+  margin-bottom: 15px; 
+}
+
+label { 
+  display: block; 
+  margin-bottom: 5px; 
+  font-weight: bold; 
+}
+
+input, select, textarea { 
+  width: 100%; 
+  padding: 10px; 
+  border: 1px solid #ccc; 
+  border-radius: 6px; 
+  box-sizing: border-box; 
+}
+
+/* ส่วนตารางอะไหล่ */
+.part-row { 
+  display: flex; 
+  gap: 8px; 
+  margin-bottom: 8px; 
+  align-items: center; 
+}
+
+.btn-remove { 
+  background: #d9534f; 
+  color: white; 
+  border: none; 
+  padding: 8px 12px; 
+  border-radius: 6px; 
+  cursor: pointer; 
+}
+
+.btn-add { 
+  background: #5cb85c; 
+  color: white; 
+  border: none; 
+  padding: 8px 15px; 
+  border-radius: 6px; 
+  cursor: pointer; 
+  margin-bottom: 15px; 
+}
+
+button[type="submit"] { 
+  width: 100%; 
+  padding: 12px; 
+  background: #0275d8; 
+  color: white; 
+  border: none; 
+  border-radius: 6px; 
+  font-size: 16px; 
+  cursor: pointer; 
+  font-weight: bold; 
+}
+
+button[type="submit"]:hover { 
+  background: #025aa5; 
+}
+
+#status { 
+  margin-top: 15px; 
+  text-align: center; 
+  font-weight: bold; 
+}
+
+/* สไตล์การ์ดและตารางประวัติ */
+.summary-card { 
+  background: #e9ecef; 
+  border-left: 5px solid #0275d8; 
+  padding: 15px 20px; 
+  border-radius: 6px; 
+  margin-bottom: 15px; 
+  display: flex; 
+  justify-content: space-between; 
+  flex-wrap: wrap; 
+  gap: 10px; 
+}
+
+.next-service-card { 
+  background: #fff3cd; 
+  border-left: 5px solid #ffc107; 
+  padding: 15px 20px; 
+  border-radius: 6px; 
+  margin-bottom: 15px; 
+  display: flex; 
+  justify-content: space-between; 
+  flex-wrap: wrap; 
+  gap: 10px; 
+}
+
+.summary-value, .next-service-value { 
+  font-size: 16px; 
+  font-weight: bold; 
+  color: #d9534f; 
+}
+
+.table-responsive { 
+  overflow-x: auto; 
+}
+
+table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  margin-top: 15px; 
+}
+
+th, td { 
+  border: 1px solid #ddd; 
+  padding: 10px; 
+  text-align: left; 
+  font-size: 14px; 
+}
+
+th { 
+  background-color: #0275d8; 
+  color: white; 
+}
+
+tr:nth-child(even) { 
+  background-color: #f9f9f9; 
+}
+
+.btn-drive { 
+  background-color: #f0ad4e; 
+  color: white; 
+  padding: 5px 10px; 
+  border-radius: 4px; 
+  text-decoration: none; 
+  font-size: 13px; 
+  font-weight: bold; 
+  display: inline-block; 
+}
+
+.btn-drive:hover { 
+  background-color: #ec971f; 
+}
+
+.export-btn-group { 
+  display: flex; 
+  gap: 10px; 
+  margin-bottom: 15px; 
+}
+
+.btn-export-excel { 
+  background-color: #198754; 
+  color: white; 
+  border: none; 
+  padding: 8px 16px; 
+  border-radius: 6px; 
+  cursor: pointer; 
+  font-weight: bold; 
+}
+
+.btn-export-csv { 
+  background-color: #0dcaf0; 
+  color: #212529; 
+  border: none; 
+  padding: 8px 16px; 
+  border-radius: 6px; 
+  cursor: pointer; 
+  font-weight: bold; 
+}
