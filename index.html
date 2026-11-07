@@ -5,13 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ระบบเช็คระยะรถยนต์ Isuzu</title>
   
-  <!-- Google Fonts: Prompt -->
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- เชื่อมโยงไฟล์ style.css -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- SheetJS สำหรับ Export Excel -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -58,9 +53,24 @@
               <select id="serviceInterval">
                 <option value="10,000 กม.">10,000 กม. / 6 เดือน</option>
                 <option value="20,000 กม.">20,000 กม. / 12 เดือน</option>
+                <option value="30,000 กม.">30,000 กม. / 18 เดือน</option>
                 <option value="40,000 กม.">40,000 กม. / 24 เดือน</option>
+                <option value="50,000 กม.">50,000 กม. / 30 เดือน</option>
+                <option value="60,000 กม.">60,000 กม. / 36 เดือน</option>
+                <option value="70,000 กม.">70,000 กม. / 42 เดือน</option>
                 <option value="80,000 กม.">80,000 กม. / 48 เดือน</option>
+                <option value="90,000 กม.">90,000 กม. / 54 เดือน</option>
                 <option value="100,000 กม.">100,000 กม. / 60 เดือน</option>
+                <option value="110,000 กม.">110,000 กม. / 66 เดือน</option>
+                <option value="120,000 กม.">120,000 กม. / 72 เดือน</option>
+                <option value="130,000 กม.">130,000 กม. / 78 เดือน</option>
+                <option value="140,000 กม.">140,000 กม. / 84 เดือน</option>
+                <option value="150,000 กม.">150,000 กม. / 90 เดือน</option>
+                <option value="160,000 กม.">160,000 กม. / 96 เดือน</option>
+                <option value="170,000 กม.">170,000 กม. / 102 เดือน</option>
+                <option value="180,000 กม.">180,000 กม. / 108 เดือน</option>
+                <option value="190,000 กม.">190,000 กม. / 114 เดือน</option>
+                <option value="200,000 กม.">200,000 กม. / 120 เดือน</option>
               </select>
             </div>
             <div class="form-group">
@@ -144,12 +154,12 @@
       </div>
     </div>
 
-    <!-- TAB 3: ตารางบำรุงรักษามาตรฐาน Isuzu แบบอินเตอร์แอคทีฟ -->
+    <!-- TAB 3: ตารางบำรุงรักษามาตรฐาน Isuzu -->
     <div id="tabSchedule" class="tab-content">
       <div class="card">
-        <h2>📋 ตารางตรวจเช็คระยะและเปลี่ยนถ่ายอะไหล่มาตรฐาน Isuzu</h2>
+        <h2>📋 ตารางตรวจเช็คระยะและเปลี่ยนถ่ายอะไหล่มาตรฐาน Isuzu (10,000 - 200,000 กม.)</h2>
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
-          ตารางอ้างอิงสำหรับรถยนต์ Isuzu D-Max / MU-X (1.9 / 3.0 Ddi Blue Power)
+          เลือกช่วงระยะทางด้านล่างเพื่อดูรายละเอียดอะไหล่ที่ต้องเปลี่ยนและรายการตรวจเช็กตามคู่มือทางการ
         </p>
 
         <div class="legend-bar">
@@ -157,35 +167,29 @@
           <div class="legend-item"><span class="badge-i">I</span> = ตรวจเช็ก (Inspect)</div>
         </div>
 
-        <!-- ตัวเลือกช่วงระยะ (Cards) -->
-        <div class="schedule-tabs-grid" id="scheduleCardsContainer">
-          <div class="sch-tab-card active" onclick="selectSchedule('10k')">
-            <div class="sch-km">10,000 กม.</div>
-            <div class="sch-sub">6 เดือน</div>
-          </div>
-          <div class="sch-tab-card" onclick="selectSchedule('20k')">
-            <div class="sch-km">20,000 กม.</div>
-            <div class="sch-sub">12 เดือน</div>
-          </div>
-          <div class="sch-tab-card" onclick="selectSchedule('40k')">
-            <div class="sch-km">40,000 กม.</div>
-            <div class="sch-sub">24 เดือน 🔥</div>
-          </div>
-          <div class="sch-tab-card" onclick="selectSchedule('60k')">
-            <div class="sch-km">60,000 กม.</div>
-            <div class="sch-sub">36 เดือน</div>
-          </div>
-          <div class="sch-tab-card" onclick="selectSchedule('80k')">
-            <div class="sch-km">80,000 กม.</div>
-            <div class="sch-sub">48 เดือน 🔥</div>
-          </div>
-          <div class="sch-tab-card" onclick="selectSchedule('100k')">
-            <div class="sch-km">100,000 กม.</div>
-            <div class="sch-sub">60 เดือน</div>
-          </div>
+        <div class="schedule-tabs-container" id="scheduleCardsContainer">
+          <div class="sch-tab-card active" onclick="selectSchedule('10k')"><div class="sch-km">10,000 กม.</div><div class="sch-sub">6 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('20k')"><div class="sch-km">20,000 กม.</div><div class="sch-sub">12 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('30k')"><div class="sch-km">30,000 กม.</div><div class="sch-sub">18 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('40k')"><div class="sch-km">40,000 กม.</div><div class="sch-sub">24 เดือน 🔥</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('50k')"><div class="sch-km">50,000 กม.</div><div class="sch-sub">30 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('60k')"><div class="sch-km">60,000 กม.</div><div class="sch-sub">36 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('70k')"><div class="sch-km">70,000 กม.</div><div class="sch-sub">42 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('80k')"><div class="sch-km">80,000 กม.</div><div class="sch-sub">48 เดือน 🔥</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('90k')"><div class="sch-km">90,000 กม.</div><div class="sch-sub">54 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('100k')"><div class="sch-km">100,000 กม.</div><div class="sch-sub">60 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('110k')"><div class="sch-km">110,000 กม.</div><div class="sch-sub">66 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('120k')"><div class="sch-km">120,000 กม.</div><div class="sch-sub">72 เดือน 🔥</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('130k')"><div class="sch-km">130,000 กม.</div><div class="sch-sub">78 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('140k')"><div class="sch-km">140,000 กม.</div><div class="sch-sub">84 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('150k')"><div class="sch-km">150,000 กม.</div><div class="sch-sub">90 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('160k')"><div class="sch-km">160,000 กม.</div><div class="sch-sub">96 เดือน 🔥</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('170k')"><div class="sch-km">170,000 กม.</div><div class="sch-sub">102 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('180k')"><div class="sch-km">180,000 กม.</div><div class="sch-sub">108 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('190k')"><div class="sch-km">190,000 กม.</div><div class="sch-sub">114 เดือน</div></div>
+          <div class="sch-tab-card" onclick="selectSchedule('200k')"><div class="sch-km">200,000 กม.</div><div class="sch-sub">120 เดือน 🔥</div></div>
         </div>
 
-        <!-- กล่องแสดงรายละเอียดตามรอบที่เลือก -->
         <div class="detail-section-box">
           <div class="detail-title">
             <span id="detailHeaderTitle">รายละเอียดการเช็คระยะ: 10,000 กม. / 6 เดือน</span>
@@ -193,100 +197,15 @@
           </div>
           
           <div class="parts-grid-list">
-            <!-- คอลัมน์ซ้าย: รายการเปลี่ยนอะไหล่ -->
             <div class="part-category-card">
               <div class="cat-heading">🔹 รายการอะไหล่เปลี่ยนถ่าย (Replacements)</div>
               <div id="replacementItemsList"></div>
             </div>
-            <!-- คอลัมน์ขวา: รายการตรวจเช็ก -->
             <div class="part-category-card">
               <div class="cat-heading">🔸 รายการตรวจเช็คและบำรุงรักษา (Inspections)</div>
               <div id="inspectionItemsList"></div>
             </div>
           </div>
-        </div>
-
-        <!-- ตาราง Matrix ด้านล่าง -->
-        <h3 style="font-size: 16px; color: var(--text-main); margin-bottom: 12px;">ตารางเปรียบเทียบทุกช่วงระยะ (Maintenance Schedule Matrix)</h3>
-        <div class="table-container">
-          <table class="matrix-table">
-            <thead>
-              <tr>
-                <th>รายการอะไหล่ / การตรวจเช็ก</th>
-                <th>10k กม.</th>
-                <th>20k กม.</th>
-                <th>40k กม. (ใหญ่)</th>
-                <th>60k กม.</th>
-                <th>80k กม. (ใหญ่)</th>
-                <th>100k กม.</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>น้ำมันเครื่อง D-Max/MU-X</td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-              </tr>
-              <tr>
-                <td>ไส้กรองน้ำมันเครื่อง + แหวนรอง</td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-              </tr>
-              <tr>
-                <td>ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)</td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-              </tr>
-              <tr>
-                <td>ไส้กรองอากาศ (Air Filter)</td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-              </tr>
-              <tr>
-                <td>น้ำมันเกียร์ / เฟืองท้าย</td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-              </tr>
-              <tr>
-                <td>น้ำมันเบรก และระบบเบรก</td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-              </tr>
-              <tr>
-                <td>น้ำยาหล่อเย็น (Coolant)</td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-                <td><span class="matrix-badge mb-r">R</span></td>
-                <td><span class="matrix-badge mb-i">I</span></td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
@@ -294,118 +213,43 @@
   </div>
 
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEL55rWThQG6i0CvUhAEAaoQTKG5cClk0Nm4XSwF1EWRDJHOgk1OtOec6BEwA289Vb/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw9kymz_zNj3xEle5t4-3NRnQ9SAM3YoMzoz0DOdgdm-AnM2OyevGPO3QLK2HpPf3Mw/exec";
 
     const ISUZU_PARTS_LIST = [
-      "น้ำมันเครื่อง DDI MAX (6+1 ลิตร)",
-      "ไส้กรองน้ำมันเครื่อง",
+      "น้ำมันเครื่อง DDI MAX (7 ลิตร)",
+      "ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)",
       "แหวนรองน็อตถ่ายน้ำมันเครื่อง",
       "ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)",
-      "ไส้กรองอากาศ",
+      "ไส้กรองอากาศ (Air Filter)",
+      "ไส้กรองแอร์ (Cabin Filter)",
       "น้ำมันเกียร์ธรรมดา / อัตโนมัติ",
       "น้ำมันเฟืองท้าย",
-      "น้ำมันเบรก",
-      "น้ำยาคูลแลนท์ (หม้อน้ำ)",
+      "น้ำมันเบรก และระบบคลัตช์",
+      "น้ำยาหล่อเย็นหม้อน้ำ (Coolant)",
       "ระบุอื่นๆ..."
     ];
 
-    // ฐานข้อมูลตารางบำรุงรักษาแต่ละระยะ
     const scheduleDatabase = {
-      '10k': {
-        title: 'รายละเอียดการเช็คระยะ: 10,000 กม. / 6 เดือน',
-        intervalName: '10,000 กม.',
-        replacements: [
-          { name: 'น้ำมันเครื่อง DDI MAX (6+1 ลิตร)', price: 1450 },
-          { name: 'ไส้กรองน้ำมันเครื่อง', price: 290 },
-          { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }
-        ],
-        inspections: [
-          'ตรวจเช็คระดับน้ำมันเบรก',
-          'ตรวจเช็คกรองอากาศ/กรองแอร์',
-          'ตรวจเช็คผ้าเบรกและยาง',
-          'ตรวจเช็คแบตเตอรี่'
-        ]
-      },
-      '20k': {
-        title: 'รายละเอียดการเช็คระยะ: 20,000 กม. / 12 เดือน',
-        intervalName: '20,000 กม.',
-        replacements: [
-          { name: 'น้ำมันเครื่อง DDI MAX (6+1 ลิตร)', price: 1450 },
-          { name: 'ไส้กรองน้ำมันเครื่อง', price: 290 },
-          { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 },
-          { name: 'ไส้กรองแอร์ (Cabin Air Filter)', price: 350 }
-        ],
-        inspections: [
-          'ตรวจเช็คกรองน้ำมันเชื้อเพลิง (กรองโซล่า)',
-          'ตรวจเช็คกรองอากาศ',
-          'ตรวจเช็คระบบเบรกและช่วงล่างทั้งหมด',
-          'ตรวจเช็คสายพานหน้าเครื่อง'
-        ]
-      },
-      '40k': {
-        title: 'รายละเอียดการเช็คระยะ: 40,000 กม. / 24 เดือน (รอบใหญ่)',
-        intervalName: '40,000 กม.',
-        replacements: [
-          { name: 'น้ำมันเครื่อง DDI MAX (6+1 ลิตร)', price: 1450 },
-          { name: 'ไส้กรองน้ำมันเครื่อง', price: 290 },
-          { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 },
-          { name: 'ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)', price: 850 },
-          { name: 'ไส้กรองอากาศ', price: 480 },
-          { name: 'น้ำมันเกียร์ / น้ำมันเฟืองท้าย', price: 950 },
-          { name: 'น้ำมันเบรก', price: 380 }
-        ],
-        inspections: [
-          'ตรวจเช็คน้ำยาหล่อเย็นเครื่องยนต์',
-          'ตรวจเช็คระบบบังคับเลี้ยวและช่วงล่าง',
-          'ตรวจเช็คระบบไอเสียและข้อต่อท่อ'
-        ]
-      },
-      '60k': {
-        title: 'รายละเอียดการเช็คระยะ: 60,000 กม. / 36 เดือน',
-        intervalName: '60,000 กม.',
-        replacements: [
-          { name: 'น้ำมันเครื่อง DDI MAX (6+1 ลิตร)', price: 1450 },
-          { name: 'ไส้กรองน้ำมันเครื่อง', price: 290 },
-          { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }
-        ],
-        inspections: [
-          'ตรวจเช็คกรองโซล่าและกรองอากาศ',
-          'ตรวจเช็คระบบเบรก ช่วงล่าง และยาง',
-          'ตรวจเช็คระดับของเหลวทั้งหมดในห้องเครื่อง'
-        ]
-      },
-      '80k': {
-        title: 'รายละเอียดการเช็คระยะ: 80,000 กม. / 48 เดือน (รอบใหญ่)',
-        intervalName: '80,000 กม.',
-        replacements: [
-          { name: 'น้ำมันเครื่อง DDI MAX (6+1 ลิตร)', price: 1450 },
-          { name: 'ไส้กรองน้ำมันเครื่อง', price: 290 },
-          { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 },
-          { name: 'ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)', price: 850 },
-          { name: 'ไส้กรองอากาศ', price: 480 },
-          { name: 'น้ำมันเกียร์ / เฟืองท้าย', price: 950 },
-          { name: 'น้ำมันเบรก', price: 380 },
-          { name: 'น้ำยาหล่อเย็นเครื่องยนต์ (Coolant)', price: 650 }
-        ],
-        inspections: [
-          'ตรวจเช็คสภาพสายพานไทミング/สายพานหน้าเครื่อง',
-          'ตรวจเช็คระบบปรับอากาศและพัดลมหม้อน้ำ'
-        ]
-      },
-      '100k': {
-        title: 'รายละเอียดการเช็คระยะ: 100,000 กม. / 60 เดือน',
-        intervalName: '100,000 กม.',
-        replacements: [
-          { name: 'น้ำมันเครื่อง DDI MAX (6+1 ลิตร)', price: 1450 },
-          { name: 'ไส้กรองน้ำมันเครื่อง', price: 290 },
-          { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 },
-          { name: 'หัวเทียน / ตรวจเช็คหัวฉีด', price: 1200 }
-        ],
-        inspections: [
-          'ตรวจเช็คระบบระบายความร้อนและปั๊มน้ำ',
-          'ตรวจเช็คช่วงล่าง ลูกหมาก และยางหุ้มเพลา'
-        ]
-      }
+      '10k': { title: 'รายละเอียดการเช็คระยะ: 10,000 กม. / 6 เดือน', intervalName: '10,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }], inspections: ['ตรวจเช็คระดับน้ำมันเบรกและคลัตช์', 'ตรวจเช็คกรองอากาศ/กรองแอร์', 'ตรวจเช็คผ้าเบรกและดอกยาง', 'ตรวจเช็คแบตเตอรี่และระบบไฟ'] },
+      '20k': { title: 'รายละเอียดการเช็คระยะ: 20,000 กม. / 12 เดือน', intervalName: '20,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }, { name: 'ไส้กรองแอร์ (Cabin Filter)', price: 450 }], inspections: ['ตรวจเช็คกรองน้ำมันเชื้อเพลิง (กรองโซล่า)', 'ตรวจเช็คกรองอากาศ', 'ตรวจเช็คระบบเบรกและช่วงล่างทั้งหมด', 'ตรวจเช็คสายพานหน้าเครื่อง'] },
+      '30k': { title: 'รายละเอียดการเช็คระยะ: 30,000 กม. / 18 เดือน', intervalName: '30,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }], inspections: ['ตรวจเช็คระบบเบรก ช่วงล่าง', 'ตรวจเช็คกรองอากาศและกรองแอร์'] },
+      '40k': { title: 'รายละเอียดการเช็คระยะ: 40,000 กม. / 24 เดือน (รอบใหญ่)', intervalName: '40,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }, { name: 'ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)', price: 845 }, { name: 'ไส้กรองอากาศ (Air Filter)', price: 520 }, { name: 'น้ำมันเกียร์ธรรมดา / อัตโนมัติ', price: 980 }, { name: 'น้ำมันเฟืองท้าย', price: 580 }, { name: 'น้ำมันเบรก และระบบคลัตช์', price: 396 }], inspections: ['ตรวจเช็คน้ำยาหล่อเย็นเครื่องยนต์', 'ตรวจเช็คระบบบังคับเลี้ยวและช่วงล่าง'] },
+      '50k': { title: 'รายละเอียดการเช็คระยะ: 50,000 กม. / 30 เดือน', intervalName: '50,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }], inspections: ['ตรวจเช็คระบบเบรกและช่วงล่างทั่วไป'] },
+      '60k': { title: 'รายละเอียดการเช็คระยะ: 60,000 กม. / 36 เดือน', intervalName: '60,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }, { name: 'ไส้กรองแอร์ (Cabin Filter)', price: 450 }], inspections: ['ตรวจเช็คกรองโซล่าและกรองอากาศ', 'ตรวจเช็คระบบเบรก ช่วงล่าง และยาง'] },
+      '70k': { title: 'รายละเอียดการเช็คระยะ: 70,000 กม. / 42 เดือน', intervalName: '70,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }], inspections: ['ตรวจเช็คระบบเบรก ช่วงล่าง'] },
+      '80k': { title: 'รายละเอียดการเช็คระยะ: 80,000 กม. / 48 เดือน (รอบใหญ่)', intervalName: '80,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }, { name: 'ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)', price: 845 }, { name: 'ไส้กรองอากาศ (Air Filter)', price: 520 }, { name: 'น้ำมันเกียร์ธรรมดา / อัตโนมัติ', price: 980 }, { name: 'น้ำมันเฟืองท้าย', price: 580 }, { name: 'น้ำมันเบรก และระบบคลัตช์', price: 396 }, { name: 'น้ำยาหล่อเย็นหม้อน้ำ (Coolant)', price: 650 }], inspections: ['ตรวจเช็คสภาพสายพานหน้าเครื่อง', 'ตรวจเช็คระบบปรับอากาศ'] },
+      '90k': { title: 'รายละเอียดการเช็คระยะ: 90,000 กม. / 54 เดือน', intervalName: '90,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }], inspections: ['ตรวจเช็คระบบเบรกและช่วงล่าง'] },
+      '100k': { title: 'รายละเอียดการเช็คระยะ: 100,000 กม. / 60 เดือน', intervalName: '100,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }, { name: 'ไส้กรองแอร์ (Cabin Filter)', price: 450 }], inspections: ['ตรวจเช็คระบบระบายความร้อนและปั๊มน้ำ', 'ตรวจเช็คช่วงล่าง ลูกหมาก'] },
+      '110k': { title: 'รายละเอียดการเช็คระยะ: 110,000 กม. / 66 เดือน', intervalName: '110,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }], inspections: ['ตรวจเช็คระบบเบรกและช่วงล่าง'] },
+      '120k': { title: 'รายละเอียดการเช็คระยะ: 120,000 กม. / 72 เดือน (รอบใหญ่)', intervalName: '120,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }, { name: 'ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)', price: 845 }, { name: 'ไส้กรองอากาศ (Air Filter)', price: 520 }, { name: 'น้ำมันเกียร์ธรรมดา / อัตโนมัติ', price: 980 }, { name: 'น้ำมันเฟืองท้าย', price: 580 }, { name: 'น้ำมันเบรก และระบบคลัตช์', price: 396 }], inspections: ['ตรวจเช็คระบบช่วงล่าง สายพาน และเบรก'] },
+      '130k': { title: 'รายละเอียดการเช็คระยะ: 130,000 กม. / 78 เดือน', intervalName: '130,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }], inspections: ['ตรวจเช็คระบบเบรกและช่วงล่าง'] },
+      '140k': { title: 'รายละเอียดการเช็คระยะ: 140,000 กม. / 84 เดือน', intervalName: '140,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }, { name: 'ไส้กรองแอร์ (Cabin Filter)', price: 450 }], inspections: ['ตรวจเช็คระบบเบรก ช่วงล่าง และกรองอากาศ'] },
+      '150k': { title: 'รายละเอียดการเช็คระยะ: 150,000 กม. / 90 เดือน', intervalName: '150,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }], inspections: ['ตรวจเช็คระบบเบรกและช่วงล่าง'] },
+      '160k': { title: 'รายละเอียดการเช็คระยะ: 160,000 กม. / 96 เดือน (รอบใหญ่)', intervalName: '160,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }, { name: 'ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)', price: 845 }, { name: 'ไส้กรองอากาศ (Air Filter)', price: 520 }, { name: 'น้ำมันเกียร์ธรรมดา / อัตโนมัติ', price: 980 }, { name: 'น้ำมันเฟืองท้าย', price: 580 }, { name: 'น้ำมันเบรก และระบบคลัตช์', price: 396 }, { name: 'น้ำยาหล่อเย็นหม้อน้ำ (Coolant)', price: 650 }], inspections: ['ตรวจเช็คระบบระบายความร้อนและสายพาน'] },
+      '170k': { title: 'รายละเอียดการเช็คระยะ: 170,000 กม. / 102 เดือน', intervalName: '170,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }], inspections: ['ตรวจเช็คระบบเบรกและช่วงล่าง'] },
+      '180k': { title: 'รายละเอียดการเช็คระยะ: 180,000 กม. / 108 เดือน', intervalName: '180,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }, { name: 'ไส้กรองแอร์ (Cabin Filter)', price: 450 }], inspections: ['ตรวจเช็คระบบเบรก ช่วงล่าง และกรองโซล่า'] },
+      '190k': { title: 'รายละเอียดการเช็คระยะ: 190,000 กม. / 114 เดือน', intervalName: '190,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }], inspections: ['ตรวจเช็คระบบเบรกและช่วงล่าง'] },
+      '200k': { title: 'รายละเอียดการเช็คระยะ: 200,000 กม. / 120 เดือน (รอบใหญ่พิเศษ)', intervalName: '200,000 กม.', replacements: [{ name: 'น้ำมันเครื่อง DDI MAX (7 ลิตร)', price: 1590 }, { name: 'ไส้กรองน้ำมันเครื่อง (แท้ Isuzu)', price: 305 }, { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }, { name: 'ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)', price: 845 }, { name: 'ไส้กรองอากาศ (Air Filter)', price: 520 }, { name: 'น้ำมันเกียร์ธรรมดา / อัตโนมัติ', price: 980 }, { name: 'น้ำมันเฟืองท้าย', price: 580 }, { name: 'น้ำมันเบรก และระบบคลัตช์', price: 396 }], inspections: ['ตรวจเช็คระบบใหญ่ทั้งหมด เครื่องยนต์ ช่วงล่าง และระบบเบรก'] }
     };
 
     let currentSelectedSchKey = '10k';
@@ -420,7 +264,7 @@
 
       let repHtml = '';
       data.replacements.forEach(item => {
-        repHtml += `<div class="item-bullet"><span>✔️</span> ${item.name} (${item.price} ฿)</div>`;
+        repHtml += `<div class="item-bullet"><span>✔️</span> ${item.name} (${item.price.toLocaleString()} ฿)</div>`;
       });
       document.getElementById('replacementItemsList').innerHTML = repHtml;
 
@@ -434,16 +278,10 @@
     function importScheduleToForm() {
       const data = scheduleDatabase[currentSelectedSchKey];
       document.getElementById('serviceInterval').value = data.intervalName;
-      
-      // เคลียร์รายการอะไหล่เดิม
       document.getElementById('partsContainer').innerHTML = '';
-      
-      // เพิ่มรายการอะไหล่ที่ต้องเปลี่ยนจากตารางลงฟอร์ม
       data.replacements.forEach(part => {
         addPartRow(part.name, 1, part.price);
       });
-
-      // สลับไปหน้า Tab ฟอร์ม
       switchTab('tabForm', document.querySelector('.tab-nav button:first-child'));
       alert(`✅ นำเข้ารายการบำรุงรักษา (${data.intervalName}) ลงในฟอร์มเรียบร้อยแล้วครับ!`);
     }
@@ -454,8 +292,7 @@
     document.addEventListener("DOMContentLoaded", () => {
       addPartRow();
       loadHistory();
-      selectSchedule('10k'); // โหลดค่าเริ่มต้น
-      
+      selectSchedule('10k');
       const savedTheme = localStorage.getItem('isuzu_theme') || 'lavender';
       setTheme(savedTheme);
     });
@@ -463,7 +300,6 @@
     function switchTab(tabId, btnElem) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      
       document.getElementById(tabId).classList.add('active');
       btnElem.classList.add('active');
     }
@@ -475,7 +311,6 @@
         document.documentElement.setAttribute('data-theme', themeName);
       }
       localStorage.setItem('isuzu_theme', themeName);
-
       document.querySelectorAll('.theme-dot').forEach(dot => dot.classList.remove('active'));
       const activeDot = document.querySelector(`.dot-${themeName}`);
       if(activeDot) activeDot.classList.add('active');
@@ -484,13 +319,10 @@
     function addPartRow(selectedName = "", qty = 1, price = 0) {
       const container = document.getElementById("partsContainer");
       const rowId = Date.now() + Math.random();
-      
       const div = document.createElement("div");
       div.className = "part-row";
       div.id = `row-${rowId}`;
-
       let optionsHtml = ISUZU_PARTS_LIST.map(item => `<option value="${item}" ${item === selectedName ? "selected" : ""}>${item}</option>`).join("");
-
       div.innerHTML = `
         <select style="flex: 2;" onchange="handlePartSelect(this)" class="part-select">${optionsHtml}</select>
         <input type="text" style="flex: 2; display: none;" placeholder="ระบุชื่ออะไหล่" class="custom-part-name">
@@ -558,12 +390,10 @@
       e.preventDefault();
       const statusDiv = document.getElementById('status');
       const files = document.getElementById('imageFiles').files;
-
       if (files.length < 2 || files.length > 5) {
         alert("กรุณาเลือกรูปภาพประกอบจำนวน 2 ถึง 5 รูปครับ");
         return;
       }
-
       statusDiv.style.color = 'var(--primary)';
       statusDiv.textContent = '⏳ กำลังประมวลผลและอัปโหลดข้อมูล...';
       document.getElementById('submitBtn').disabled = true;
@@ -632,7 +462,6 @@
       currentFilteredData = data;
       const tableBody = document.getElementById('historyTableBody');
       tableBody.innerHTML = '';
-
       let totalExpense = 0;
       if (data.length === 0) {
         tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">ไม่พบประวัติการเช็คระยะ</td></tr>';
@@ -642,7 +471,6 @@
         document.getElementById('nextOdo').textContent = '-';
         return;
       }
-
       const currentOdo = parseFloat(data[0].CurrentOdo) || 0;
       let nextOdo = Math.ceil((currentOdo + 1) / 10000) * 10000;
       if (nextOdo === currentOdo) nextOdo = currentOdo + 10000;
@@ -651,7 +479,6 @@
         const cost = parseFloat(row.TotalCost) || 0;
         totalExpense += cost;
         const tr = document.createElement('tr');
-        
         let dateStr = row.ServiceDate || (row.Timestamp ? new Date(row.Timestamp).toLocaleDateString('th-TH') : '');
         let driveBtn = row.DriveFolderUrl ? `<a href="${row.DriveFolderUrl}" target="_blank" class="btn-drive">📂 เปิดดูรูป</a>` : '-';
         let itemsDisplay = formatItemsText(row.ItemsChecked);
@@ -703,7 +530,7 @@
 
     function exportToCSV() {
       if (currentFilteredData.length === 0) { alert("ไม่มีข้อมูลสำหรับส่งออก"); return; }
-      let csv = "\uFEFFวันที่เข้าเช็ค,ทะเบียนรถ,เลขไมล์,รอบระยะ,รายการอะไหล่,ค่าใช้จ่าย,ลิงก์รูปภาพ,หมายเหตุ\n";
+      let csv = "﻿วันที่เข้าเช็ค,ทะเบียนรถ,เลขไมล์,รอบระยะ,รายการอะไหล่,ค่าใช้จ่าย,ลิงก์รูปภาพ,หมายเหตุ\n";
       currentFilteredData.forEach(r => {
         csv += `"${r.ServiceDate || ''}","${r.LicensePlate || ''}","${r.CurrentOdo || 0}","${r.ServiceInterval || ''}","${formatItemsText(r.ItemsChecked)}","${r.TotalCost || 0}","${r.DriveFolderUrl || ''}","${r.Remark || ''}"\n`;
       });
