@@ -36,7 +36,7 @@
     <div class="tab-nav">
       <button class="tab-btn active" onclick="switchTab('tabForm', this)">📝 บันทึกการเข้าเช็คระยะ</button>
       <button class="tab-btn" onclick="switchTab('tabHistory', this)">🕒 ประวัติ & ค้นหาย้อนหลัง</button>
-      <button class="tab-btn" onclick="switchTab('tabSchedule', this)">📋 ดารางบำรุงรักษามาตรฐาน Isuzu</button>
+      <button class="tab-btn" onclick="switchTab('tabSchedule', this)">📋 ตารางบำรุงรักษามาตรฐาน Isuzu</button>
     </div>
 
     <!-- TAB 1: ฟอร์มบันทึกข้อมูล -->
@@ -102,7 +102,6 @@
       <div class="card">
         <h2>📋 ประวัติการเช็คระยะย้อนหลัง</h2>
         
-        <!-- การ์ดสรุป -->
         <div class="dashboard-flex">
           <div class="dash-box box-green">
             <div class="dash-title">ยอดรวมค่าใช้จ่าย</div>
@@ -116,7 +115,6 @@
           </div>
         </div>
 
-        <!-- แถบค้นหาและปุ่ม Export -->
         <div class="action-bar">
           <input type="text" id="searchPlate" placeholder="🔍 ค้นหาด้วยเลขทะเบียนรถ..." oninput="filterHistory()" style="flex: 1; min-width: 200px;">
           <div style="display: flex; gap: 6px;">
@@ -146,98 +144,146 @@
       </div>
     </div>
 
-    <!-- TAB 3: ดารางบำรุงรักษามาตรฐาน Isuzu -->
+    <!-- TAB 3: ตารางบำรุงรักษามาตรฐาน Isuzu แบบอินเตอร์แอคทีฟ -->
     <div id="tabSchedule" class="tab-content">
       <div class="card">
-        <h2>📋 ดารางบำรุงรักษามาตรฐาน Isuzu</h2>
+        <h2>📋 ตารางตรวจเช็คระยะและเปลี่ยนถ่ายอะไหล่มาตรฐาน Isuzu</h2>
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
-          ตารางแสดงรายการตรวจเช็คและเปลี่ยนถ่ายตามระยะทางมาตรฐานของรถปิกอัพ Isuzu (สัญลักษณ์: <span class="check-mark">✓</span> ตรวจเช็ค / <span class="change-mark">เปลี่ยน</span> เปลี่ยนถ่าย)
+          ตารางอ้างอิงสำหรับรถยนต์ Isuzu D-Max / MU-X (1.9 / 3.0 Ddi Blue Power)
         </p>
 
+        <div class="legend-bar">
+          <div class="legend-item"><span class="badge-r">R</span> = เปลี่ยน (Replace)</div>
+          <div class="legend-item"><span class="badge-i">I</span> = ตรวจเช็ก (Inspect)</div>
+        </div>
+
+        <!-- ตัวเลือกช่วงระยะ (Cards) -->
+        <div class="schedule-tabs-grid" id="scheduleCardsContainer">
+          <div class="sch-tab-card active" onclick="selectSchedule('10k')">
+            <div class="sch-km">10,000 กม.</div>
+            <div class="sch-sub">6 เดือน</div>
+          </div>
+          <div class="sch-tab-card" onclick="selectSchedule('20k')">
+            <div class="sch-km">20,000 กม.</div>
+            <div class="sch-sub">12 เดือน</div>
+          </div>
+          <div class="sch-tab-card" onclick="selectSchedule('40k')">
+            <div class="sch-km">40,000 กม.</div>
+            <div class="sch-sub">24 เดือน 🔥</div>
+          </div>
+          <div class="sch-tab-card" onclick="selectSchedule('60k')">
+            <div class="sch-km">60,000 กม.</div>
+            <div class="sch-sub">36 เดือน</div>
+          </div>
+          <div class="sch-tab-card" onclick="selectSchedule('80k')">
+            <div class="sch-km">80,000 กม.</div>
+            <div class="sch-sub">48 เดือน 🔥</div>
+          </div>
+          <div class="sch-tab-card" onclick="selectSchedule('100k')">
+            <div class="sch-km">100,000 กม.</div>
+            <div class="sch-sub">60 เดือน</div>
+          </div>
+        </div>
+
+        <!-- กล่องแสดงรายละเอียดตามรอบที่เลือก -->
+        <div class="detail-section-box">
+          <div class="detail-title">
+            <span id="detailHeaderTitle">รายละเอียดการเช็คระยะ: 10,000 กม. / 6 เดือน</span>
+            <button class="btn-import-sch" onclick="importScheduleToForm()">📥 ดึงรายการนี้ไปฟอร์มบันทึก</button>
+          </div>
+          
+          <div class="parts-grid-list">
+            <!-- คอลัมน์ซ้าย: รายการเปลี่ยนอะไหล่ -->
+            <div class="part-category-card">
+              <div class="cat-heading">🔹 รายการอะไหล่เปลี่ยนถ่าย (Replacements)</div>
+              <div id="replacementItemsList"></div>
+            </div>
+            <!-- คอลัมน์ขวา: รายการตรวจเช็ก -->
+            <div class="part-category-card">
+              <div class="cat-heading">🔸 รายการตรวจเช็คและบำรุงรักษา (Inspections)</div>
+              <div id="inspectionItemsList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ตาราง Matrix ด้านล่าง -->
+        <h3 style="font-size: 16px; color: var(--text-main); margin-bottom: 12px;">ตารางเปรียบเทียบทุกช่วงระยะ (Maintenance Schedule Matrix)</h3>
         <div class="table-container">
-          <table>
+          <table class="matrix-table">
             <thead>
               <tr>
-                <th style="text-align: left;">รายการตรวจเช็คและบำรุงรักษา</th>
-                <th>10,000 กม.<br><span style="font-size: 10px; font-weight: normal;">6 เดือน</span></th>
-                <th>20,000 กม.<br><span style="font-size: 10px; font-weight: normal;">12 เดือน</span></th>
-                <th>30,000 กม.<br><span style="font-size: 10px; font-weight: normal;">18 เดือน</span></th>
-                <th>40,000 กม.<br><span style="font-size: 10px; font-weight: normal;">24 เดือน</span></th>
-                <th>50,000 กม.<br><span style="font-size: 10px; font-weight: normal;">30 เดือน</span></th>
+                <th>รายการอะไหล่ / การตรวจเช็ก</th>
+                <th>10k กม.</th>
+                <th>20k กม.</th>
+                <th>40k กม. (ใหญ่)</th>
+                <th>60k กม.</th>
+                <th>80k กม. (ใหญ่)</th>
+                <th>100k กม.</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style="text-align: left;">1. น้ำมันเครื่อง</td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td>น้ำมันเครื่อง D-Max/MU-X</td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
               </tr>
               <tr>
-                <td style="text-align: left;">2. ไส้กรองน้ำมันเครื่อง</td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td>ไส้กรองน้ำมันเครื่อง + แหวนรอง</td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
               </tr>
               <tr>
-                <td style="text-align: left;">3. แหวนรองน็อตถ่ายน้ำมันเครื่อง</td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
+                <td>ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)</td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
               </tr>
               <tr>
-                <td style="text-align: left;">4. ไส้กรองเชื้อเพลิง (กรองโซล่า)</td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="check-mark">✓</span></td>
+                <td>ไส้กรองอากาศ (Air Filter)</td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
               </tr>
               <tr>
-                <td style="text-align: left;">5. ไส้กรองอากาศ</td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="check-mark">✓</span></td>
+                <td>น้ำมันเกียร์ / เฟืองท้าย</td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
               </tr>
               <tr>
-                <td style="text-align: left;">6. น้ำมันเกียร์ / น้ำมันเฟืองท้าย</td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="change-mark">เปลี่ยน</span></td>
-                <td><span class="check-mark">✓</span></td>
+                <td>น้ำมันเบรก และระบบเบรก</td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
               </tr>
               <tr>
-                <td style="text-align: left;">7. น้ำมันเบรก และระบบเบรก</td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-              </tr>
-              <tr>
-                <td style="text-align: left;">8. น้ำยาหล่อเย็นเครื่องยนต์ (คูลแลนท์)</td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="change-mark">เปลี่ยน*</span></td>
-                <td><span class="check-mark">✓</span></td>
-              </tr>
-              <tr>
-                <td style="text-align: left;">9. ตรวจเช็กระบบช่วงล่างและยาง</td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
-                <td><span class="check-mark">✓</span></td>
+                <td>น้ำยาหล่อเย็น (Coolant)</td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
+                <td><span class="matrix-badge mb-r">R</span></td>
+                <td><span class="matrix-badge mb-i">I</span></td>
               </tr>
             </tbody>
           </table>
@@ -248,7 +294,7 @@
   </div>
 
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHaYw6RbM8MXUJNvPEeD4L81XlVKw3L91mN5H6LLSc9if1tomwHFyOZAO6arPM4nZI/exec";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEL55rWThQG6i0CvUhAEAaoQTKG5cClk0Nm4XSwF1EWRDJHOgk1OtOec6BEwA289Vb/exec";
 
     const ISUZU_PARTS_LIST = [
       "น้ำมันเครื่อง DDI MAX (6+1 ลิตร)",
@@ -263,18 +309,157 @@
       "ระบุอื่นๆ..."
     ];
 
+    // ฐานข้อมูลตารางบำรุงรักษาแต่ละระยะ
+    const scheduleDatabase = {
+      '10k': {
+        title: 'รายละเอียดการเช็คระยะ: 10,000 กม. / 6 เดือน',
+        intervalName: '10,000 กม.',
+        replacements: [
+          { name: 'น้ำมันเครื่อง DDI MAX (6+1 ลิตร)', price: 1450 },
+          { name: 'ไส้กรองน้ำมันเครื่อง', price: 290 },
+          { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }
+        ],
+        inspections: [
+          'ตรวจเช็คระดับน้ำมันเบรก',
+          'ตรวจเช็คกรองอากาศ/กรองแอร์',
+          'ตรวจเช็คผ้าเบรกและยาง',
+          'ตรวจเช็คแบตเตอรี่'
+        ]
+      },
+      '20k': {
+        title: 'รายละเอียดการเช็คระยะ: 20,000 กม. / 12 เดือน',
+        intervalName: '20,000 กม.',
+        replacements: [
+          { name: 'น้ำมันเครื่อง DDI MAX (6+1 ลิตร)', price: 1450 },
+          { name: 'ไส้กรองน้ำมันเครื่อง', price: 290 },
+          { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 },
+          { name: 'ไส้กรองแอร์ (Cabin Air Filter)', price: 350 }
+        ],
+        inspections: [
+          'ตรวจเช็คกรองน้ำมันเชื้อเพลิง (กรองโซล่า)',
+          'ตรวจเช็คกรองอากาศ',
+          'ตรวจเช็คระบบเบรกและช่วงล่างทั้งหมด',
+          'ตรวจเช็คสายพานหน้าเครื่อง'
+        ]
+      },
+      '40k': {
+        title: 'รายละเอียดการเช็คระยะ: 40,000 กม. / 24 เดือน (รอบใหญ่)',
+        intervalName: '40,000 กม.',
+        replacements: [
+          { name: 'น้ำมันเครื่อง DDI MAX (6+1 ลิตร)', price: 1450 },
+          { name: 'ไส้กรองน้ำมันเครื่อง', price: 290 },
+          { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 },
+          { name: 'ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)', price: 850 },
+          { name: 'ไส้กรองอากาศ', price: 480 },
+          { name: 'น้ำมันเกียร์ / น้ำมันเฟืองท้าย', price: 950 },
+          { name: 'น้ำมันเบรก', price: 380 }
+        ],
+        inspections: [
+          'ตรวจเช็คน้ำยาหล่อเย็นเครื่องยนต์',
+          'ตรวจเช็คระบบบังคับเลี้ยวและช่วงล่าง',
+          'ตรวจเช็คระบบไอเสียและข้อต่อท่อ'
+        ]
+      },
+      '60k': {
+        title: 'รายละเอียดการเช็คระยะ: 60,000 กม. / 36 เดือน',
+        intervalName: '60,000 กม.',
+        replacements: [
+          { name: 'น้ำมันเครื่อง DDI MAX (6+1 ลิตร)', price: 1450 },
+          { name: 'ไส้กรองน้ำมันเครื่อง', price: 290 },
+          { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 }
+        ],
+        inspections: [
+          'ตรวจเช็คกรองโซล่าและกรองอากาศ',
+          'ตรวจเช็คระบบเบรก ช่วงล่าง และยาง',
+          'ตรวจเช็คระดับของเหลวทั้งหมดในห้องเครื่อง'
+        ]
+      },
+      '80k': {
+        title: 'รายละเอียดการเช็คระยะ: 80,000 กม. / 48 เดือน (รอบใหญ่)',
+        intervalName: '80,000 กม.',
+        replacements: [
+          { name: 'น้ำมันเครื่อง DDI MAX (6+1 ลิตร)', price: 1450 },
+          { name: 'ไส้กรองน้ำมันเครื่อง', price: 290 },
+          { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 },
+          { name: 'ไส้กรองน้ำมันเชื้อเพลิง (กรองโซล่า)', price: 850 },
+          { name: 'ไส้กรองอากาศ', price: 480 },
+          { name: 'น้ำมันเกียร์ / เฟืองท้าย', price: 950 },
+          { name: 'น้ำมันเบรก', price: 380 },
+          { name: 'น้ำยาหล่อเย็นเครื่องยนต์ (Coolant)', price: 650 }
+        ],
+        inspections: [
+          'ตรวจเช็คสภาพสายพานไทミング/สายพานหน้าเครื่อง',
+          'ตรวจเช็คระบบปรับอากาศและพัดลมหม้อน้ำ'
+        ]
+      },
+      '100k': {
+        title: 'รายละเอียดการเช็คระยะ: 100,000 กม. / 60 เดือน',
+        intervalName: '100,000 กม.',
+        replacements: [
+          { name: 'น้ำมันเครื่อง DDI MAX (6+1 ลิตร)', price: 1450 },
+          { name: 'ไส้กรองน้ำมันเครื่อง', price: 290 },
+          { name: 'แหวนรองน็อตถ่ายน้ำมันเครื่อง', price: 25 },
+          { name: 'หัวเทียน / ตรวจเช็คหัวฉีด', price: 1200 }
+        ],
+        inspections: [
+          'ตรวจเช็คระบบระบายความร้อนและปั๊มน้ำ',
+          'ตรวจเช็คช่วงล่าง ลูกหมาก และยางหุ้มเพลา'
+        ]
+      }
+    };
+
+    let currentSelectedSchKey = '10k';
+
+    function selectSchedule(key) {
+      currentSelectedSchKey = key;
+      document.querySelectorAll('.sch-tab-card').forEach(c => c.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      const data = scheduleDatabase[key];
+      document.getElementById('detailHeaderTitle').textContent = data.title;
+
+      let repHtml = '';
+      data.replacements.forEach(item => {
+        repHtml += `<div class="item-bullet"><span>✔️</span> ${item.name} (${item.price} ฿)</div>`;
+      });
+      document.getElementById('replacementItemsList').innerHTML = repHtml;
+
+      let inspHtml = '';
+      data.inspections.forEach(item => {
+        inspHtml += `<div class="item-bullet"><span style="color:var(--primary);">🔍</span> ${item}</div>`;
+      });
+      document.getElementById('inspectionItemsList').innerHTML = inspHtml;
+    }
+
+    function importScheduleToForm() {
+      const data = scheduleDatabase[currentSelectedSchKey];
+      document.getElementById('serviceInterval').value = data.intervalName;
+      
+      // เคลียร์รายการอะไหล่เดิม
+      document.getElementById('partsContainer').innerHTML = '';
+      
+      // เพิ่มรายการอะไหล่ที่ต้องเปลี่ยนจากตารางลงฟอร์ม
+      data.replacements.forEach(part => {
+        addPartRow(part.name, 1, part.price);
+      });
+
+      // สลับไปหน้า Tab ฟอร์ม
+      switchTab('tabForm', document.querySelector('.tab-nav button:first-child'));
+      alert(`✅ นำเข้ารายการบำรุงรักษา (${data.intervalName}) ลงในฟอร์มเรียบร้อยแล้วครับ!`);
+    }
+
     let allHistoryData = [];
     let currentFilteredData = [];
 
     document.addEventListener("DOMContentLoaded", () => {
       addPartRow();
       loadHistory();
+      selectSchedule('10k'); // โหลดค่าเริ่มต้น
       
       const savedTheme = localStorage.getItem('isuzu_theme') || 'lavender';
       setTheme(savedTheme);
     });
 
-    // ฟังก์ชันสลับ Tab เมนู
     function switchTab(tabId, btnElem) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
